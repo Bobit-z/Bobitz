@@ -1,0 +1,98 @@
+import os
+import random
+
+IMAGE_DIRECTORY = "Imagini"                                                      //The cards for each deck(Albastru/Galben)
+card_image_mapping = {
+    "Battle roar:All players discard the deck": "Albastru_Speciala.jpg",
+    "4 Attack": "Albastru_4_Attack.jpg",
+    "3 Attack": "Albastru_3_Attack.jpg",
+    "2 Attack": "Albastru_2_Attack.jpg",
+    "1 Attack +1 Fulger": "Albastru_1_Attack_1_Fulger.jpg",
+    "2 Fulgere": "Albastru_2_Fulger.jpg",
+    "+2 Cards": "Albastru_2_Fulger.jpg",
+    "Another Life": "Albastru_1_viata_1_+carte.jpg",
+    "Another life 2": "Albastru_2_life.jpg",
+    "FIREBALL!!!": "Galben_Special.jpg",
+    "3 Attack": "Galben_3_Attack.jpg",
+    "2 Attack": "Galben_2_Attack.jpg",
+    "Attack + Fulger": "Galben_1_Attack_1_Fulger.jpg",
+    "Another Life + Fulger": "Galben_1_Fulger_1_Life.jpg",
+    "Fulger 2": "Galben_2_Fulger.jpg",
+    "Another life 3": "Galben_3_Life.jpg",
+    "Add 3 cards": "Galben_3_+cards.jpg",
+}
+
+def create_card(name, card_type, value, actions):
+    return {
+        "Name": name,
+        "Type": card_type,
+        "Value": value,
+        "Actions": actions,
+        "Image": os.path.join(IMAGE_DIRECTORY, card_image_mapping.get(name, "default.jpg"))
+    }
+
+def create_deckAlbastru():                                                                       //First deck: Albastru
+    deck = [
+        create_card("Battle roar:All players discard the deck", "Special", 0, ["Discard all"]),
+        *[create_card("4 Attack", "Attack", 4, ["Attack"]) for _ in range(2)],
+        *[create_card("3 Attack", "Attack", 3, ["Attack"]) for _ in range(4)],
+        *[create_card("2 Attack", "Attack", 2, ["Attack"]) for _ in range(2)],
+        *[create_card("1 Attack +1 Fulger", "Mixed", 1, ["Attack", "Fulger"]) for _ in range(2)],
+        *[create_card("2 Fulgere", "Fulger", 0, ["Fulger"]) for _ in range(2)],
+        *[create_card("+2 Cards", "Draw", 0, ["Draw 2"]) for _ in range(2)],
+        *[create_card("Another Life", "Life", 0, ["Gain Life"]) for _ in range(4)],
+        *[create_card("Another life 2", "Life", 0, ["Gain 2 Life"]) for _ in range(2)],
+        *[create_card(f"Mixed Card {i+1}", "Mixed", 0, ["Mixed Action"]) for i in range(20 - 18)],
+    ]
+    return deck
+
+def create_deckGalben():                                                                 //second deck: Galben
+    deck = [
+        create_card("FIREBALL!!!", "Special", 0, ["Fireball"]),
+        *[create_card("3 Attack", "Attack", 3, ["Attack"]) for _ in range(3)],
+        *[create_card("2 Attack", "Attack", 2, ["Attack"]) for _ in range(3)],
+        *[create_card("Attack + Fulger", "Mixed", 1, ["Attack", "Fulger"]) for _ in range(2)],
+        *[create_card("Fulger", "Fulger", 0, ["Fulger"]) for _ in range(2)],
+        *[create_card("Another Life + Fulger", "Mixed", 0, ["Gain Life", "Fulger"]) for _ in range(2)],
+        *[create_card("Fulger 2", "Fulger", 0, ["Fulger 2"]) for _ in range(2)],
+        *[create_card("Another life 3", "Life", 0, ["Gain 3 Life"]) for _ in range(2)],
+        *[create_card("Add 3 cards", "Draw", 0, ["Draw 3"])],
+        *[create_card(f"Mixed Card {i+1}", "Mixed", 0, ["Mixed Action"]) for i in range(20 - 17)],
+    ]
+    return deck
+
+def shuffle_deck(deck):                        //Shuffle Deck
+    random.shuffle(deck)
+    return deck
+
+def draw_card(deck):
+    if len(deck) > 0:
+        card = deck.pop(0)
+
+        return card
+    else:
+        return "No cards left in the deck!"
+
+def card_game():                                //Each habd of cards, one for Albastru deck, and Galben deck
+    deck1 = create_deckAlbastru()
+    deck2 = create_deckGalben()
+
+    print(f"Original Deck 1: {deck1}")
+    deck1 = shuffle_deck(deck1)
+    print(f"Shuffled Deck 1: {deck1}")
+
+    print(f"Original Deck 2: {deck2}")
+    deck2 = shuffle_deck(deck2)
+    print(f"Shuffled Deck 2: {deck2}")
+
+    print("\nDrawing from Deck 1:")
+    for _ in range(3):
+        card = draw_card(deck1)
+        print(f"Drawn card: {card['Name']}")
+
+    print("\nDrawing from Deck 2:")
+    for _ in range(3):
+        card = draw_card(deck2)
+        print(f"Drawn card: {card['Name']}")
+
+card_game()
