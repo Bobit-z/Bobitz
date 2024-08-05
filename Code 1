@@ -1,98 +1,144 @@
-import os
+import pygame
 import random
+#___________________________________________________fereastra app
+# Initialize Pygame
+pygame.init()
 
-IMAGE_DIRECTORY = "Imagini"                                                      //The cards for each deck(Albastru/Galben)
-card_image_mapping = {
-    "Battle roar:All players discard the deck": "Albastru_Speciala.jpg",
-    "4 Attack": "Albastru_4_Attack.jpg",
-    "3 Attack": "Albastru_3_Attack.jpg",
-    "2 Attack": "Albastru_2_Attack.jpg",
-    "1 Attack +1 Fulger": "Albastru_1_Attack_1_Fulger.jpg",
-    "2 Fulgere": "Albastru_2_Fulger.jpg",
-    "+2 Cards": "Albastru_2_Fulger.jpg",
-    "Another Life": "Albastru_1_viata_1_+carte.jpg",
-    "Another life 2": "Albastru_2_life.jpg",
-    "FIREBALL!!!": "Galben_Special.jpg",
-    "3 Attack": "Galben_3_Attack.jpg",
-    "2 Attack": "Galben_2_Attack.jpg",
-    "Attack + Fulger": "Galben_1_Attack_1_Fulger.jpg",
-    "Another Life + Fulger": "Galben_1_Fulger_1_Life.jpg",
-    "Fulger 2": "Galben_2_Fulger.jpg",
-    "Another life 3": "Galben_3_Life.jpg",
-    "Add 3 cards": "Galben_3_+cards.jpg",
-}
+# Create screen
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("D&D Meyhem Cards")
+#___________________________________________________def carti + random
+# Define the Card class
+class Card:
+    def __init__(self, name, card_type, power, effects):
+        self.name = name
+        self.card_type = card_type
+        self.power = power
+        self.effects = effects
 
-def create_card(name, card_type, value, actions):
-    return {
-        "Name": name,
-        "Type": card_type,
-        "Value": value,
-        "Actions": actions,
-        "Image": os.path.join(IMAGE_DIRECTORY, card_image_mapping.get(name, "default.jpg"))
-    }
+    def __repr__(self):
+        return f"{self.name} ({self.card_type}, Power: {self.power}, Effects: {self.effects})"
 
-def create_deckAlbastru():                                                                       //First deck: Albastru
-    deck = [
-        create_card("Battle roar:All players discard the deck", "Special", 0, ["Discard all"]),
-        *[create_card("4 Attack", "Attack", 4, ["Attack"]) for _ in range(2)],
-        *[create_card("3 Attack", "Attack", 3, ["Attack"]) for _ in range(4)],
-        *[create_card("2 Attack", "Attack", 2, ["Attack"]) for _ in range(2)],
-        *[create_card("1 Attack +1 Fulger", "Mixed", 1, ["Attack", "Fulger"]) for _ in range(2)],
-        *[create_card("2 Fulgere", "Fulger", 0, ["Fulger"]) for _ in range(2)],
-        *[create_card("+2 Cards", "Draw", 0, ["Draw 2"]) for _ in range(2)],
-        *[create_card("Another Life", "Life", 0, ["Gain Life"]) for _ in range(4)],
-        *[create_card("Another life 2", "Life", 0, ["Gain 2 Life"]) for _ in range(2)],
-        *[create_card(f"Mixed Card {i+1}", "Mixed", 0, ["Mixed Action"]) for i in range(20 - 18)],
+def create_card(name, card_type, power, effects):
+    return Card(name, card_type, power, effects)
+
+# Define Blue Deck
+blue_deck = [
+    create_card("Albastru_1_Attack_1_Fulger", "Mixed", 1, ["Attack", "Fulger"]),
+    create_card("Albastru_2_+carte", "Draw", 0, ["Draw 2"]),
+    create_card("Albastru_Speciala", "special", 0, ["All playerd_discard_the_decks"]),
+    create_card("Albastru_4_Attack", "Attack", 4, ["Attack 4"]),
+    create_card("Albastru_3_Attack", "Attack", 3, ["Attack 3"]),
+    create_card("Albastru_2_Attack", "Attack", 2, ["Attack 2"]),
+    create_card("Albastru_2_Fulger", "Fulger", 2, ["Fulger"]),
+    create_card("Albastru_1_viata_1_+carte", "Life", 0, ["+1 Life","Draw 1"]),
+    create_card("Albastru_2_life", "Life", 0, ["+2 Life"]),
+
+]
+
+# Define Orange Deck
+orange_deck = [
+    create_card("Galben_1_Attack_1_Fulger", "Mixed", 1, ["Attack", "Fulger"]),
+    create_card("Galben_2_Attack", "Attack", 2, ["Attack 2"]),
+    create_card("Galben_Speciala", "Special", 3, ["Attack 3",]),
+    create_card("Galben_3_Attack", "Attack", 3, ["Attack 3"]),
+    create_card("Galben_1_Fulger_1_Life", "Mixed", 0, ["+1 Life", "Fulger"]),
+    create_card("Galben_2_Fulger", "Fulger", 2, ["Fulger 2"]),
+    create_card("Galben_3_Life", "Life", 3, ["+3 Life"]),
+    create_card("Galben_3_+cards", "Draw", 3, ["Draw 3"]),
+
+    # Add more cards if needed
+]
+
+# Shuffle the decks
+random.shuffle(blue_deck)
+random.shuffle(orange_deck)
+#___________________________________________________
+#Check length and contents of player_blue
+player_blue = blue_deck[:3]
+print(f"Player Blue Deck Length: {len(player_blue)}")
+print("Player Blue Cards:")
+for card in player_blue:
+    print(card)
+
+# Check if there are enough cards before accessing them
+if len(player_blue) < 3:
+    print("Error: Not enough cards in player_blue deck.")
+else:
+    # Define card positions
+    card_positions = [
+        {"name": player_blue[0].name, "x": 10, "y": 400},
+        {"name": player_blue[1].name, "x": 60, "y": 400},
+        {"name": player_blue[2].name, "x": 110, "y": 400}
     ]
-    return deck
 
-def create_deckGalben():                                                                 //second deck: Galben
-    deck = [
-        create_card("FIREBALL!!!", "Special", 0, ["Fireball"]),
-        *[create_card("3 Attack", "Attack", 3, ["Attack"]) for _ in range(3)],
-        *[create_card("2 Attack", "Attack", 2, ["Attack"]) for _ in range(3)],
-        *[create_card("Attack + Fulger", "Mixed", 1, ["Attack", "Fulger"]) for _ in range(2)],
-        *[create_card("Fulger", "Fulger", 0, ["Fulger"]) for _ in range(2)],
-        *[create_card("Another Life + Fulger", "Mixed", 0, ["Gain Life", "Fulger"]) for _ in range(2)],
-        *[create_card("Fulger 2", "Fulger", 0, ["Fulger 2"]) for _ in range(2)],
-        *[create_card("Another life 3", "Life", 0, ["Gain 3 Life"]) for _ in range(2)],
-        *[create_card("Add 3 cards", "Draw", 0, ["Draw 3"])],
-        *[create_card(f"Mixed Card {i+1}", "Mixed", 0, ["Mixed Action"]) for i in range(20 - 17)],
-    ]
-    return deck
+    # Load an image for a card
+    def get_card_image(card):
+        img_path = f"images/{card.name}.jpg"
+        try:
+            return pygame.image.load(img_path)
+        except pygame.error as e:
+            print(f"Error loading image {img_path}: {e}")
+            return pygame.Surface((100, 150))  # Placeholder surface if image not found
 
-def shuffle_deck(deck):                        //Shuffle Deck
-    random.shuffle(deck)
-    return deck
+    # Display function for cards
+    def display_cards(screen, cards, positions):
+        for card, pos in zip(cards, positions):
+            image = get_card_image(card)
+            screen.blit(image, (pos["x"], pos["y"]))
+#
+    #######################
 
-def draw_card(deck):
-    if len(deck) > 0:
-        card = deck.pop(0)
 
-        return card
+
+    player_orange = orange_deck[:3]
+    print(f"Player orange Deck Length: {len(player_orange)}")
+    print("Player orange Cards:")
+    for card in player_orange:
+        print(card)
+
+    # Check if there are enough cards before accessing them
+    if len(player_orange) < 3:
+        print("Error: Not enough cards in player_orange deck.")
     else:
-        return "No cards left in the deck!"
+        # Define card positions
+        card_positions = [
+            {"name": player_orange[0].name, "x": 220, "y": 400},
+            {"name": player_orange[1].name, "x": 270, "y": 400},
+            {"name": player_orange[2].name, "x": 320, "y": 400}
+        ]
 
-def card_game():                                //Each habd of cards, one for Albastru deck, and Galben deck
-    deck1 = create_deckAlbastru()
-    deck2 = create_deckGalben()
 
-    print(f"Original Deck 1: {deck1}")
-    deck1 = shuffle_deck(deck1)
-    print(f"Shuffled Deck 1: {deck1}")
+        # Load an image for a card
+        def get_card_image(card):
+            img_path = f"{card.name}.jpg"
+            try:
+                return pygame.image.load(img_path)
+            except pygame.error as e:
+                print(f"Error loading image {img_path}: {e}")
+                return pygame.Surface((200, 250))  # Placeholder surface if image not found
 
-    print(f"Original Deck 2: {deck2}")
-    deck2 = shuffle_deck(deck2)
-    print(f"Shuffled Deck 2: {deck2}")
 
-    print("\nDrawing from Deck 1:")
-    for _ in range(3):
-        card = draw_card(deck1)
-        print(f"Drawn card: {card['Name']}")
+        # Display function for cards
+        def display_cards(screen, cards, positions):
+            for card, pos in zip(cards, positions):
+                image = get_card_image(card)
+                screen.blit(image, (pos["x"], pos["y"]))
+    #
+    # ___________________________________________________inchidere joc, probabil
+    # Main loop
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    print("\nDrawing from Deck 2:")
-    for _ in range(3):
-        card = draw_card(deck2)
-        print(f"Drawn card: {card['Name']}")
+        screen.fill((0, 0, 0))
+        display_cards(screen, player_blue, card_positions)
+        display_cards(screen, player_orange, card_positions)
+        pygame.display.flip()
 
-card_game()
+
+
+    pygame.quit()
+
