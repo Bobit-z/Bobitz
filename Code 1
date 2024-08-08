@@ -1,15 +1,27 @@
 import pygame
 import random
-#___________________________________________________fereastra app
 # Initialize Pygame
 pygame.init()
 
 # Create screen
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((600, 800))
 pygame.display.set_caption("D&D Meyhem Cards")
-#___________________________________________________def carti + random
+
+# Load images
+background_menu = pygame.image.load("Meniu_principal.png")
+background_game = pygame.image.load("Meniu_fundal.png")
+spate_carti_a = pygame.image.load("Albastru_Spate.png")
+spate_carti_b = pygame.image.load("Galben_Spate.png")
+#buttons
+start_button = pygame.image.load("x_start.png")
+exit_button = pygame.image.load("x_Exit.png")
+add_card_button = pygame.image.load("x_add_ecard.png")
+next_button = pygame.image.load("x_next.png")
+reset_button = pygame.image.load("x_reset.png")
+
 # Define the Card class
 class Card:
+
     def __init__(self, name, card_type, power, effects):
         self.name = name
         self.card_type = card_type
@@ -19,8 +31,10 @@ class Card:
     def __repr__(self):
         return f"{self.name} ({self.card_type}, Power: {self.power}, Effects: {self.effects})"
 
+
 def create_card(name, card_type, power, effects):
     return Card(name, card_type, power, effects)
+
 
 # Define Blue Deck
 blue_deck = [
@@ -31,114 +45,111 @@ blue_deck = [
     create_card("Albastru_3_Attack", "Attack", 3, ["Attack 3"]),
     create_card("Albastru_2_Attack", "Attack", 2, ["Attack 2"]),
     create_card("Albastru_2_Fulger", "Fulger", 2, ["Fulger"]),
-    create_card("Albastru_1_viata_1_+carte", "Life", 0, ["+1 Life","Draw 1"]),
+    create_card("Albastru_1_viata_1_+carte", "Life", 0, ["+1 Life", "Draw 1"]),
     create_card("Albastru_2_life", "Life", 0, ["+2 Life"]),
-
 ]
 
 # Define Orange Deck
 orange_deck = [
     create_card("Galben_1_Attack_1_Fulger", "Mixed", 1, ["Attack", "Fulger"]),
     create_card("Galben_2_Attack", "Attack", 2, ["Attack 2"]),
-    create_card("Galben_Speciala", "Special", 3, ["Attack 3",]),
+    create_card("Galben_Speciala", "Special", 3, ["Attack 3"]),
     create_card("Galben_3_Attack", "Attack", 3, ["Attack 3"]),
     create_card("Galben_1_Fulger_1_Life", "Mixed", 0, ["+1 Life", "Fulger"]),
     create_card("Galben_2_Fulger", "Fulger", 2, ["Fulger 2"]),
     create_card("Galben_3_Life", "Life", 3, ["+3 Life"]),
     create_card("Galben_3_+cards", "Draw", 3, ["Draw 3"]),
-
-    # Add more cards if needed
 ]
 
 # Shuffle the decks
 random.shuffle(blue_deck)
 random.shuffle(orange_deck)
-#___________________________________________________
-#Check length and contents of player_blue
-player_blue = blue_deck[:3]
-print(f"Player Blue Deck Length: {len(player_blue)}")
-print("Player Blue Cards:")
-for card in player_blue:
-    print(card)
-
-# Check if there are enough cards before accessing them
-if len(player_blue) < 3:
-    print("Error: Not enough cards in player_blue deck.")
-else:
-    # Define card positions
-    card_positions = [
-        {"name": player_blue[0].name, "x": 10, "y": 400},
-        {"name": player_blue[1].name, "x": 60, "y": 400},
-        {"name": player_blue[2].name, "x": 110, "y": 400}
-    ]
-
-    # Load an image for a card
-    def get_card_image(card):
-        img_path = f"images/{card.name}.jpg"
-        try:
-            return pygame.image.load(img_path)
-        except pygame.error as e:
-            print(f"Error loading image {img_path}: {e}")
-            return pygame.Surface((100, 150))  # Placeholder surface if image not found
-
-    # Display function for cards
-    def display_cards(screen, cards, positions):
-        for card, pos in zip(cards, positions):
-            image = get_card_image(card)
-            screen.blit(image, (pos["x"], pos["y"]))
-#
-    #######################
 
 
-
-    player_orange = orange_deck[:3]
-    print(f"Player orange Deck Length: {len(player_orange)}")
-    print("Player orange Cards:")
-    for card in player_orange:
-        print(card)
-
-    # Check if there are enough cards before accessing them
-    if len(player_orange) < 3:
-        print("Error: Not enough cards in player_orange deck.")
-    else:
-        # Define card positions
-        card_positions = [
-            {"name": player_orange[0].name, "x": 220, "y": 400},
-            {"name": player_orange[1].name, "x": 270, "y": 400},
-            {"name": player_orange[2].name, "x": 320, "y": 400}
-        ]
+def get_card_image(card):
+    img_path = f"{card.name}.png"
+    try:
+        return pygame.image.load(img_path)
+    except pygame.error as e:
+        print(f"Error loading image {img_path}: {e}")
+        return pygame.Surface((100, 150))  # Placeholder surface if image not found
 
 
-        # Load an image for a card
-        def get_card_image(card):
-            img_path = f"{card.name}.jpg"
-            try:
-                return pygame.image.load(img_path)
-            except pygame.error as e:
-                print(f"Error loading image {img_path}: {e}")
-                return pygame.Surface((200, 250))  # Placeholder surface if image not found
+def display_cards(screen, cards, positions):
+    for card, pos in zip(cards, positions):
+        image = get_card_image(card)
+        screen.blit(image, (pos["x"], pos["y"]))
 
 
-        # Display function for cards
-        def display_cards(screen, cards, positions):
-            for card, pos in zip(cards, positions):
-                image = get_card_image(card)
-                screen.blit(image, (pos["x"], pos["y"]))
-    #
-    # ___________________________________________________inchidere joc, probabil
-    # Main loop
-    running = True
-    while running:
+def main_menu():
+    while True:
+        screen.blit(background_menu, (0, 0))
+
+        # Draw buttons
+        screen.blit(start_button, (200, 500))
+        screen.blit(exit_button, (550, 10))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                return False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if 200 <= mouse_pos[0] <= 200 + start_button.get_width() and 500 <= mouse_pos[1] <= 500 + start_button.get_height():
+                    return True
 
-        screen.fill((0, 0, 0))
-        display_cards(screen, player_blue, card_positions)
-        display_cards(screen, player_orange, card_positions)
+                if 550 <= mouse_pos[0] <= 550 + exit_button.get_width() and 10 <= mouse_pos[1] <= 10 + exit_button.get_height():
+                    pygame.quit()
+                    return False
+
         pygame.display.flip()
 
 
+def game_loop():
+    player_hand_1 = blue_deck[:3]
+    player_hand_2 = orange_deck[:3]
+
+    card_positions_hand_1 = [
+        {"x": 200, "y": 50 + i * 30} for i in range(len(player_hand_1))
+    ]
+
+    card_positions_hand_2 = [
+        {"x": 200, "y": 400 + i * 30} for i in range(len(player_hand_2))
+    ]
+
+    running = True
+    while running:
+        screen.blit(background_game, (0, 0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if 750 <= mouse_pos[0] <= 750 + exit_button.get_width() and 10 <= mouse_pos[1] <= 10 + exit_button.get_height():
+                    running = False
+                if 650 <= mouse_pos[0] <= 650 + add_card_button.get_width() and 400 <= mouse_pos[1] <= 400 + add_card_button.get_height():
+                    if len(blue_deck) > 0:
+                        player_hand_1.append(blue_deck.pop(0))
+                        card_positions_hand_1.append({"x": 10, "y": 400 + len(player_hand_1) * 30})
+                    if len(orange_deck) > 0:
+                        player_hand_2.append(orange_deck.pop(0))
+                        card_positions_hand_2.append({"x": 150, "y": 400 + len(player_hand_2) * 30})
+                if 50 <= mouse_pos[0] <= 50 + next_button.get_width() and 400 <= mouse_pos[1] <= 400 + next_button.get_height():
+                    print("Ending round")
+                    # Here, you can define what happens when the round ends
+
+        display_cards(screen, player_hand_1, card_positions_hand_1)
+        display_cards(screen, player_hand_2, card_positions_hand_2)
+
+        screen.blit(add_card_button, (650, 400))
+        screen.blit(next_button, (50, 400))
+        screen.blit(exit_button, (750, 10))
+
+        pygame.display.flip()
 
     pygame.quit()
 
+
+if main_menu():
+    game_loop()
